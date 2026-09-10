@@ -7,7 +7,7 @@ export function setupCounter(element) {
   element.addEventListener('click', () => setCounter(counter + 1))
   setCounter(0)
 
-  const registration = navigator.modelContext.registerTool({
+  const registration = document.modelContext.registerTool({
   name: "get_page_title",
   description: "Get current page title",
   inputSchema: { type: "object", properties: {} },
@@ -18,7 +18,7 @@ export function setupCounter(element) {
   }
 });
     
-navigator.modelContext.registerTool({
+document.modelContext.registerTool({
   name: 'get_counter',
   description: 'This will return the current value of the counter, call this before setting the counter',
   inputSchema: {
@@ -33,7 +33,7 @@ navigator.modelContext.registerTool({
   }
 });
 
-navigator.modelContext.registerTool({
+document.modelContext.registerTool({
   name: 'set_counter',
   description: 'This will set the counter to the desired value',
   inputSchema: {
@@ -48,6 +48,24 @@ navigator.modelContext.registerTool({
     setCounter(newValue)
     return {
       content: [{ type: 'text', text: 'counter is now ' + args.newCounterValue }]
+    };
+  }
+})
+
+document.modelContext.registerTool({
+  name: 'toggle_theme',
+  description: 'Switches the page between light and dark mode',
+  inputSchema: {
+    type: 'object',
+    properties: {}
+  },
+  async execute() {
+    const root = document.documentElement
+    const current = root.getAttribute('data-theme') === 'light' ? 'light' : 'dark'
+    const next = current === 'dark' ? 'light' : 'dark'
+    root.setAttribute('data-theme', next)
+    return {
+      content: [{ type: 'text', text: 'theme is now ' + next }]
     };
   }
 })
